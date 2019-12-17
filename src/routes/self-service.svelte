@@ -1,82 +1,99 @@
 <script>
   import { fly } from 'svelte/transition';
   import OregonForm from '../lib/oregon-form';
-  import { StepTypes } from '../lib/constants';
   import { Form } from '../components';
-
-  let formData = {};
-  let stepIdx = 0;
-  let step = null;
-  let message = '';
-
-  let render = true;
-  let component = null;
 
   const TRANSITION_DURATION = 500;
 
-  $: handleStepChange(stepIdx);
+  let formData = {};
+  let errorMsg = '';
+  let render = true;
+  let currentNode = rootNode(OregonForm);
+  let nodePath = [currentNode];
 
-  function handleStepChange(stepIdx) {
-    step = OregonForm.steps[stepIdx];
-    if (!step) {
-      message = `Hmmm, I can't find a step for index: ${stepIdx}.`;
-    } else {
-      switch (step.type) {
-        case StepTypes.Fetch:
-          step
-            .fn()
-            .then(actions.addData)
-            .then(actions.next)
-            .catch(actions.error);
-          break;
-        case StepTypes.Decision:
-          const jumpStep = step.fn(formData);
-          if (jumpStep) actions.jump(jumpStep);
-          else actions.next();
-          break;
-        default:
-          component = Form;
-          break;
-      }
+  const actions = { requestNext, requestPrevious, error };
+  $: ctx = { actions, node: currentNode, nodePath };
+
+  function requestNext() {
+    if (!currentNode.next) {
+      error({
+        message: `Requested next for node that does not have a 'next' defined, current node: ${currentNode.key}`,
+      });
+      return;
     }
+
+    const nextKey =
+      typeof currentNode.next === 'function' ? currentNode.next(formData) : currentNode.next;
+    const nextNode = getNode(OregonForm, nextKey);
+
+    if (!nextNode) {
+      error({
+        message: `Could not find node for key: ${nextKey}, current node: ${currentNode.key}`,
+      });
+      return;
+    }
+
+    changeQuestion(() => {
+      nodePath.push(nextNode);
+      currentNode = nextNode;
+    });
   }
 
-  const actions = {
-    addData(data) {
-      formData = { ...formData, ...data };
-    },
-    end() {
-      changeQuestion(() => {
-        message = 'Thank you!!';
-        step = null;
+  function requestPrevious() {
+    if (nodePath.length < 2) {
+      error({
+        message: `Requested previous for node but there are no previous nodes, current nodepath: ${JSON.stringify(
+          nodePath
+        )}`,
       });
-    },
-    next() {
-      changeQuestion(() => (stepIdx += 1));
-    },
-    back() {
-      changeQuestion(() => (stepIdx -= 1));
-    },
-    jump(key) {
-      changeQuestion(() => (stepIdx = OregonForm.steps.findIndex(step => step.key === key)));
-    },
-    error(err) {
-      message = `Hmmm, we seem to have a problem: ${err}`;
-    },
-  };
+      return;
+    }
+
+    nodePath.pop();
+    const nextNode = nodePath[nodePath.length - 1];
+
+    changeQuestion(() => {
+      currentNode = nextNode;
+    });
+  }
+
+  function error(err) {
+    errorMsg = err.message;
+    console.error(errorMsg);
+  }
 
   async function changeQuestion(fn) {
     render = false;
-    component = null;
     await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION + 50));
     fn();
     render = true;
+  }
+
+  function rootNode(nodes) {
+    const rootNodeKey = Object.keys(nodes).find(key => nodes[key].root);
+    if (!rootNodeKey) {
+      error({
+        message: 'Could not find root node',
+      });
+      return null;
+    }
+    return getNode(nodes, rootNodeKey);
+  }
+
+  function getNode(nodes, key) {
+    const node = nodes[key];
+    if (!node) return null;
+    return { ...node, key };
   }
 </script>
 
 <style>
   h1 {
     font-weight: 300;
+  }
+
+  .error {
+    color: red;
   }
 
   .container {
@@ -112,21 +129,21 @@
     <div
       in:fly={{ y: -200, duration: TRANSITION_DURATION }}
       out:fly={{ y: 400, duration: TRANSITION_DURATION }}>
-      {#if message || step.heading}
-        <h1>{message || step.heading}</h1>
-      {/if}
 
-      {#if step}
-        {#if step.description}
+      {#if errorMsg}
+        <h1 class="error">{errorMsg}</h1>
+      {:else}
+        <h1>{currentNode.heading}</h1>
+
+        {#if currentNode.description}
           <p class="description">
-            {@html step.description}
+            {@html currentNode.description}
           </p>
         {/if}
 
-        {#if step.type === StepTypes.Form}
-          <Form ctx={{ step, stepIdx, actions }} {formData} />
-        {/if}
+        <Form {ctx} {formData} />
       {/if}
+
     </div>
   {/if}
 </div>

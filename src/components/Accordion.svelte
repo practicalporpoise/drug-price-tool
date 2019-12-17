@@ -34,5 +34,7 @@
     <img src="info.svg" alt="info" />
     <span>{hidden ? '▼' : '▲'}</span>
   </button>
-  <p class:hidden>{@html content}</p>
+  <p class:hidden>
+    {@html content}
+  </p>
 </div>

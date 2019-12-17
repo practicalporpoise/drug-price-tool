@@ -5,9 +5,3 @@ export const FieldTypes = {
   Radio: 'radio',
   Text: 'text',
 };
-
-export const StepTypes = {
-  Decision: 'decision',
-  Fetch: 'fetch',
-  Form: 'form',
-};

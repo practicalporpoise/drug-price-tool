@@ -1,13 +1,13 @@
 <script>
-  import { FieldTypes, StepTypes } from '../lib/constants';
-  import formulary from '../lib/formulary';
+  import { FieldTypes } from '../lib/constants';
+  import formulary from '../data/formulary';
   import Accordion from './Accordion.svelte';
   import AutoComplete from './Autocomplete.svelte';
 
   export let ctx = {};
   export let formData = {};
 
-  const { actions, step, stepIdx } = ctx;
+  const { actions, node, nodePath } = ctx;
 </script>
 
 <style>
@@ -80,9 +80,9 @@
   }
 </style>
 
-<form on:submit|preventDefault={step.final ? actions.end : actions.next}>
-  {#if step.fields}
-    {#each step.fields as field, idx}
+<form on:submit|preventDefault={node.next ? actions.requestNext : () => {}}>
+  {#if node.fields}
+    {#each node.fields as field, idx}
       {#if field.type === FieldTypes.Radio}
         {#each field.options as { value, label }}
           <label class="radio" class:selected={value === formData[field.name]} for={value}>
@@ -141,9 +141,13 @@
     {/each}
   {/if}
   <div class="actions">
-    <button class="primary" type="submit">{step.final ? 'Finish' : 'Next'}</button>
-    {#if stepIdx > 0}
-      <button class="outline" type="button" on:click|once={actions.back} disabled>Back</button>
+    {#if node.next}
+      <button class="primary" type="submit">Next</button>
+    {:else}
+      <span />
+    {/if}
+    {#if nodePath.length > 1}
+      <button class="outline" type="button" on:click|once={actions.requestPrevious}>Back</button>
     {/if}
   </div>
 </form>
