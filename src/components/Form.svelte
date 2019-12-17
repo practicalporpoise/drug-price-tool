@@ -59,11 +59,6 @@
     color: white;
   }
 
-  button[disabled] {
-    cursor: no-drop;
-    opacity: 0.4;
-  }
-
   .actions {
     display: flex;
     flex-direction: row-reverse;
