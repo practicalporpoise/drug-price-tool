@@ -18,6 +18,14 @@
     margin: 0 0 1em 0;
   }
 
+  div {
+    text-align: center;
+  }
+
+  img {
+    margin: 0 auto;
+  }
+
   @media (min-width: 480px) {
     h1 {
       font-size: 4em;
@@ -29,9 +37,11 @@
   <title>Full Service | Oregon Prescription Drug Price Transparency Tool</title>
 </svelte:head>
 
-<h1>Full Service Form</h1>
+<div>
+  <h1>Full Service Form</h1>
 
-<figure>
-  <img alt="Borat" src="great-success.png" />
-  <figcaption>HIGH FIVE!</figcaption>
-</figure>
+  <figure>
+    <img alt="Borat" src="great-success.png" />
+    <figcaption>HIGH FIVE!</figcaption>
+  </figure>
+</div>
