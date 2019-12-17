@@ -81,8 +81,8 @@
 
   .container {
     margin: 0 auto;
-    padding-top: 6em;
-    width: 45em;
+    padding: 1em 1em;
+    max-width: 45em;
   }
 
   p {
@@ -92,6 +92,14 @@
   .description {
     font-family: serif;
     font-size: larger;
+  }
+
+  @media (min-width: 480px) {
+    .container {
+      margin: 0 auto;
+      padding: 6em 1em;
+      max-width: 45em;
+    }
   }
 </style>
 
