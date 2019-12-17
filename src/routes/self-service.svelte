@@ -12,11 +12,11 @@
   let render = true;
   let component = null;
 
+  const TRANSITION_DURATION = 500;
+
   $: handleStepChange(stepIdx);
 
   function handleStepChange(stepIdx) {
-    console.log(`handling step: ${stepIdx}`, { formData });
-
     step = OregonForm.steps[stepIdx];
     if (!step) {
       message = `Hmmm, I can't find a step for index: ${stepIdx}.`;
@@ -68,7 +68,7 @@
   async function changeQuestion(fn) {
     render = false;
     component = null;
-    await new Promise(resolve => setTimeout(resolve, 550));
+    await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION + 50));
     fn();
     render = true;
   }
@@ -101,7 +101,9 @@
 
 <div class="container">
   {#if render}
-    <div transition:fly={{ y: 400, duration: 500 }}>
+    <div
+      in:fly={{ y: -200, duration: TRANSITION_DURATION }}
+      out:fly={{ y: 400, duration: TRANSITION_DURATION }}>
       {#if message || step.heading}
         <h1>{message || step.heading}</h1>
       {/if}
