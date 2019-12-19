@@ -1,6 +1,6 @@
 <script>
   import { fly } from 'svelte/transition';
-  import OregonForm from '../lib/oregon-form';
+  import OregonForm from '../forms/oregon/oregon-form';
   import { Form } from '../components';
 
   const TRANSITION_DURATION = 500;

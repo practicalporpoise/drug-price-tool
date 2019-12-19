@@ -1,5 +1,5 @@
-import c from '../data/content.yml';
-import { Fields } from './helpers';
+import { Fields } from '../../lib/helpers';
+import c from './content.yml';
 
 export default {
   drugName: {
