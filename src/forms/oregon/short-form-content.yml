@@ -1,0 +1,51 @@
+---
+drugName:
+  heading: Please enter drug name for sale.
+states:
+  heading: What state does the user sell or intend to sell the drug?
+currentPriceRange:
+  heading: >-
+    What were the highest and lowest prices of the drug at any point during the <i>current</i> calendar year?
+  high: Highest price
+  low: Lowest price
+previousPriceRange:
+  heading: >-
+    What were the highest and lowest prices of the drug at any point during the <i>previous</i> calendar year?
+  high: Highest price
+  low: Lowest price
+patientAssistance:
+  heading: >-
+    Do you offer a patient assistance program?
+  options:
+    - { label: 'Yes', value: 'Yes' }
+    - { label: 'No', value: 'No' }
+patientAssistanceType:
+  heading: Do you offer a patient assistance program?
+  options:
+    - {
+        label: 'independent patient assistance program that reduces consumer out-of-pocket costs',
+        value: 'A',
+      }
+    - {
+        label: 'independent patient assistance program that provides services in addition to reducing consumer out-of-pocket costs',
+        value: 'B',
+      }
+    - { label: 'bona fide Independent Charity Patient Assistance Program', value: 'C' }
+exempt:
+  heading: >-
+    Do you have information to be conditionally exempt from disclosure as a trade secret?
+  options:
+    - { label: 'Yes', value: 'Yes' }
+    - { label: 'No', value: 'No' }
+    - { label: 'Unsure', value: 'Unsure' }
+determinationReceived:
+  heading: >-
+    Have you already received a determination from the Department that you must disclose the information you are claiming as a trade secret that you wish to appeal?
+  options:
+    - { label: 'Yes', value: 'Yes' }
+    - { label: 'No', value: 'No' }
+alreadySubmitted:
+  heading: Have you already submitted a report to the Department?
+  options:
+    - { label: 'Yes', value: 'Yes' }
+    - { label: 'No', value: 'No' }

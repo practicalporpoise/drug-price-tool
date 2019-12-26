@@ -1,5 +1,5 @@
 import { Fields } from '../../lib/helpers';
-import c from './content.yml';
+import c from './long-form-content.yml';
 
 export default {
   drugName: {

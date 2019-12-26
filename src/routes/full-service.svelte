@@ -1,3 +1,8 @@
+<script>
+  import Journey from '../components/Journey.svelte';
+  import OregonShortForm from '../forms/oregon/short-form';
+</script>
+
 <style>
   h1,
   figure,
@@ -37,11 +42,4 @@
   <title>Full Service | Oregon Prescription Drug Price Transparency Tool</title>
 </svelte:head>
 
-<div>
-  <h1>Full Service Form</h1>
-
-  <figure>
-    <img alt="Borat" src="great-success.png" />
-    <figcaption>HIGH FIVE!</figcaption>
-  </figure>
-</div>
+<Journey form={OregonShortForm} />

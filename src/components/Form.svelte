@@ -4,10 +4,8 @@
   import Accordion from './Accordion.svelte';
   import AutoComplete from './Autocomplete.svelte';
 
-  export let ctx = {};
-  export let formData = {};
-
-  const { actions, node, nodePath } = ctx;
+  export let ctx;
+  export let actions;
 </script>
 
 <style>
@@ -75,17 +73,17 @@
   }
 </style>
 
-<form on:submit|preventDefault={node.next ? actions.requestNext : () => {}}>
-  {#if node.fields}
-    {#each node.fields as field, idx}
+<form on:submit|preventDefault={ctx.hasNext ? actions.next : () => {}}>
+  {#if ctx.node.fields}
+    {#each ctx.node.fields as field, idx}
       {#if field.type === FieldTypes.Radio}
         {#each field.options as { value, label }}
-          <label class="radio" class:selected={value === formData[field.name]} for={value}>
+          <label class="radio" class:selected={value === ctx.formData[field.name]} for={value}>
             <input
               type="radio"
               id={value}
               name={field.name}
-              bind:group={formData[field.name]}
+              bind:group={ctx.formData[field.name]}
               {value}
               required={!field.optional} />
             {label}
@@ -99,7 +97,7 @@
             id={field.name}
             name={field.name}
             placeholder={field.placeholder}
-            bind:value={formData[field.name]}
+            bind:value={ctx.formData[field.name]}
             required={!field.optional} />
         {:else if field.type === FieldTypes.Email}
           <input
@@ -107,14 +105,14 @@
             id={field.name}
             name={field.name}
             placeholder={field.placeholder}
-            bind:value={formData[field.name]}
+            bind:value={ctx.formData[field.name]}
             required={!field.optional} />
         {:else if field.type === FieldTypes.Date}
           <input
             type="date"
             id={field.name}
             name={field.name}
-            bind:value={formData[field.name]}
+            bind:value={ctx.formData[field.name]}
             required={!field.optional} />
         {:else if field.type === FieldTypes.Autocomplete}
           <AutoComplete
@@ -122,8 +120,8 @@
             name={field.name}
             placeholder={field.placeholder}
             items={formulary}
-            bind:value={formData[field.name]}
-            bind:inItems={formData[`${field.name}InItems`]}
+            bind:value={ctx.formData[field.name]}
+            bind:inItems={ctx.formData[`${field.name}InItems`]}
             required={!field.optional} />
         {/if}
       {/if}
@@ -136,13 +134,13 @@
     {/each}
   {/if}
   <div class="actions">
-    {#if node.next}
+    {#if ctx.hasNext}
       <button class="primary" type="submit">Next</button>
     {:else}
       <span />
     {/if}
-    {#if nodePath.length > 1}
-      <button class="outline" type="button" on:click|once={actions.requestPrevious}>Back</button>
+    {#if ctx.hasPrevious}
+      <button class="outline" type="button" on:click|once={actions.previous}>Back</button>
     {/if}
   </div>
 </form>
